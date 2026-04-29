@@ -2,7 +2,7 @@
 
 > Free, open-source, privacy-first EMI calculator built for India. No ads. No data collection. Just results.
 
-![EMIPro Home](screenshots/home.png)
+![EMIPro Home](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/home.png)
 
 ## ✨ Features
 
@@ -19,49 +19,49 @@
 - **Amortization schedule** — month-by-month or yearly, export to PDF/CSV
 
 ### ⚖️ Loan Comparison
-![Compare](screenshots/compare.png)
+![Compare](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/compare.png)
 
 - Compare 2-3 loans side-by-side
 - Winner badge auto-highlighted
 - Savings callout: "Loan A saves ₹5.8L!"
 
 ### ⚡ Prepayment Simulator
-![Prepayment](screenshots/prepayment.png)
+![Prepayment](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/prepayment.png)
 
 - One-time lumpsum or monthly extra payments
 - See tenure reduction OR EMI reduction
 - "You save ₹8.5L!" celebration
 
 ### 💰 Affordability Checker
-![Afford](screenshots/afford.png)
+![Afford](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/afford.png)
 
 - Enter income → get max eligible loan
 - DTI ratio indicator (green/yellow/red)
 - Smart recommendations
 
 ### 🔄 Refinance Calculator
-![Refinance](screenshots/refinance.png)
+![Refinance](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/refinance.png)
 
 - Current loan vs new loan comparison
 - Break-even month calculation
 - Cumulative savings curve
 
 ### 💳 Foreclosure Calculator
-![Foreclosure](screenshots/foreclosure.png)
+![Foreclosure](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/foreclosure.png)
 
 - Full payoff at any month
 - Prepayment penalty included
 - Net savings after penalty
 
 ### 📈 Interest Rate Impact
-![Rate Change](screenshots/rate-change.png)
+![Rate Change](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/rate-change.png)
 
 - Floating rate sensitivity analysis
 - +0.25%, +0.5%, +1% scenarios
 - Keep EMI same (tenure changes) or vice versa
 
 ### 📱 Mobile Responsive
-![Mobile](screenshots/home-mobile.png)
+![Mobile](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/home-mobile.png)
 
 - Mobile-first design
 - Works on all screen sizes
