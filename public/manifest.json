@@ -1,0 +1,18 @@
+{
+  "name": "EMIPro - Loan/EMI Calculator",
+  "short_name": "EMIPro",
+  "description": "Best-in-class loan and EMI calculator with live calculations, charts, and amortization schedules",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F0F1A",
+  "theme_color": "#6C5CE7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
