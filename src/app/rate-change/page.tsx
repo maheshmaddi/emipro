@@ -6,7 +6,8 @@ import { ArrowLeft } from "lucide-react";
 import { useRateChangeStore } from "@/store/rate-change-store";
 import { calculateRateChangeImpact, getDefaultScenarios } from "@/lib/rate-change";
 import { SliderInput } from "@/components/calculator/SliderInput";
-import { formatCurrency, formatNumber } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { useChartTheme } from "@/lib/chart-theme";
 import {
   BarChart,
   Bar,
@@ -16,6 +17,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  ReferenceLine,
 } from "recharts";
 
 export default function RateChangePage() {
@@ -32,6 +34,8 @@ export default function RateChangePage() {
     setKeepEmiSame,
   } = useRateChangeStore();
 
+  const chartTheme = useChartTheme();
+
   const scenarios = getDefaultScenarios().map((s) => ({
     ...s,
     newRate: currentRate + s.rateChange,
@@ -42,7 +46,6 @@ export default function RateChangePage() {
     scenarios
   );
 
-  // Prepare chart data
   const chartData = impacts.map((impact) => {
     const value = keepEmiSame
       ? impact.keepEmiSame.newTotalInterest
@@ -58,6 +61,9 @@ export default function RateChangePage() {
       barColor: impact.scenario.rateChange > 0 ? "#E17055" : "#00B894",
     };
   });
+
+  // Chips filtered to not exceed max months
+  const monthChips = [12, 36, 60, 84, 120].filter((c) => c <= tenure * 12);
 
   return (
     <div className="max-w-6xl mx-auto pb-16">
@@ -118,7 +124,7 @@ export default function RateChangePage() {
               min={0}
               max={tenure * 12}
               step={1}
-              chips={[12, 36, 60, 84, 120]}
+              chips={monthChips}
               suffix=" mo"
               formatAsCurrency={false}
             />
@@ -194,33 +200,36 @@ export default function RateChangePage() {
         </h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={chartData} layout="horizontal">
-            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
             <XAxis
               dataKey="scenario"
-              stroke="#a0a0b8"
-              tick={{ fill: "#a0a0b8" }}
+              stroke={chartTheme.axisColor}
+              tick={{ fill: chartTheme.axisColor }}
             />
             <YAxis
-              stroke="#a0a0b8"
-              tick={{ fill: "#a0a0b8" }}
+              stroke={chartTheme.axisColor}
+              tick={{ fill: chartTheme.axisColor }}
               tickFormatter={(value) => `₹${(value / 100000).toFixed(1)}L`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#16213e",
-                border: "1px solid rgba(255,255,255,0.05)",
+                backgroundColor: chartTheme.tooltipBackground,
+                border: `1px solid ${chartTheme.tooltipBorder}`,
                 borderRadius: "12px",
               }}
-              labelStyle={{ color: "#a0a0b8" }}
-              formatter={(value: number, name: string, props: any) => {
+              labelStyle={{ color: chartTheme.axisColor }}
+              formatter={(value: number, name: string) => {
                 if (name === "totalInterest") {
                   return [formatCurrency(value), "Total Interest"];
                 }
-                if (name === "newRate") {
-                  return [`${props.payload.newRate.toFixed(2)}%`, "New Rate"];
-                }
                 return [value, name];
               }}
+            />
+            <ReferenceLine
+              x="0%"
+              stroke="#6C5CE7"
+              strokeDasharray="4 4"
+              label={{ value: "Current", fill: "#6C5CE7", fontSize: 11 }}
             />
             <Bar dataKey="totalInterest" radius={[4, 4, 0, 0]}>
               {chartData.map((entry, index) => (
@@ -266,7 +275,7 @@ export default function RateChangePage() {
               {impacts.map((impact, index) => (
                 <tr key={index} className="border-b border-white/5 last:border-0">
                   <td className={`py-3 px-2 font-medium ${
-                    impact.scenario.rateChange > 0 ? "text-red-400" : "text-emerald-400"
+                    impact.scenario.rateChange > 0 ? "text-red-400" : impact.scenario.rateChange < 0 ? "text-emerald-400" : "text-foreground/70"
                   }`}>
                     {impact.scenario.rateChange > 0 ? "+" : ""}
                     {impact.scenario.rateChange}%

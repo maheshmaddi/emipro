@@ -48,15 +48,18 @@ export function AmortizationTable({ principal, rate, tenure }: Props) {
     doc.setFontSize(9);
     let y = 25;
     const cols = [label, "EMI", "Principal", "Interest", "Balance"];
-    const widths = [14, 40, 90, 140, 190];
+    // Proportional columns across landscape width (297mm), leaving 14mm left margin
+    const widths = [14, 65, 120, 178, 236];
+    const pageHeight = 200; // usable height in landscape
 
     doc.setFont("helvetica", "bold");
     cols.forEach((c, i) => doc.text(c, widths[i], y));
     y += 7;
     doc.setFont("helvetica", "normal");
 
-    data.slice(0, 100).forEach((e: any) => {
-      if (y > 190) { doc.addPage(); y = 15; }
+    const rows = data.slice(0, 100);
+    rows.forEach((e: any) => {
+      if (y > pageHeight) { doc.addPage(); y = 15; }
       doc.text(String(e[keyProp]), widths[0], y);
       doc.text(formatCurrency(e.emi), widths[1], y);
       doc.text(formatCurrency(e.principal), widths[2], y);
@@ -64,6 +67,12 @@ export function AmortizationTable({ principal, rate, tenure }: Props) {
       doc.text(formatCurrency(e.balance), widths[4], y);
       y += 5;
     });
+
+    if (data.length > 100) {
+      if (y > pageHeight) { doc.addPage(); y = 15; }
+      doc.setFont("helvetica", "italic");
+      doc.text(`... and ${data.length - 100} more rows (showing first 100)`, 14, y + 4);
+    }
 
     doc.save(`amortization-${view}.pdf`);
   };
@@ -80,11 +89,21 @@ export function AmortizationTable({ principal, rate, tenure }: Props) {
               <TabsTrigger value="yearly" className="text-xs px-3 h-6">Yearly</TabsTrigger>
             </TabsList>
           </Tabs>
-          <button onClick={csvExport} className="p-1.5 rounded-md hover:bg-secondary/50 text-foreground/40 hover:text-foreground/70 transition-colors">
-            <Download className="w-4 h-4" />
+          <button
+            onClick={csvExport}
+            aria-label="Export as CSV"
+            className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-secondary/50 text-foreground/40 hover:text-foreground/70 transition-colors text-xs font-medium"
+          >
+            <Download className="w-3.5 h-3.5" />
+            CSV
           </button>
-          <button onClick={pdfExport} className="p-1.5 rounded-md hover:bg-secondary/50 text-foreground/40 hover:text-foreground/70 transition-colors">
-            <Download className="w-4 h-4" />
+          <button
+            onClick={pdfExport}
+            aria-label="Export as PDF"
+            className="flex items-center gap-1 px-2 py-1 rounded-md hover:bg-secondary/50 text-foreground/40 hover:text-foreground/70 transition-colors text-xs font-medium"
+          >
+            <Download className="w-3.5 h-3.5" />
+            PDF
           </button>
         </div>
       </div>

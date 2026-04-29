@@ -49,8 +49,10 @@ export default function ComparePage() {
             className="bg-card/50 border-2 border-dashed border-white/10 rounded-2xl p-5 flex flex-col items-center justify-center gap-2 hover:border-primary/50 hover:bg-card/80 transition-all min-h-[280px]"
           >
             <Plus className="w-8 h-8 text-foreground/30" />
-            <span className="text-sm font-medium text-foreground/30">Add Loan</span>
-            <span className="text-xs text-foreground/20">Max 3 loans</span>
+            <span className="text-sm font-medium text-foreground/30">
+              {loans.length === 2 ? "Add 3rd Loan" : "Add Loan"}
+            </span>
+            <span className="text-xs text-foreground/20">Compare up to 3</span>
           </button>
         )}
       </div>
@@ -67,6 +69,9 @@ export default function ComparePage() {
               <p className="text-3xl font-bold text-emerald-400">
                 {formatCurrency(result.savings.amount)}
               </p>
+              <p className="text-xs text-emerald-400/60 mt-2">
+                Winner determined by lowest total payment amount
+              </p>
             </div>
           )}
 
@@ -77,7 +82,7 @@ export default function ComparePage() {
           </div>
 
           {/* Detailed Comparison Table */}
-          <div className="bg-card rounded-2xl border border-white/5 overflow-hidden">
+          <div className="bg-card rounded-2xl border border-white/5 overflow-hidden overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/5">

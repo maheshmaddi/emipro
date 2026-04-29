@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Slider } from "@/components/ui/slider";
-import { formatCurrencyCompact, formatNumber } from "@/lib/format";
+import { formatCurrency, formatCurrencyCompact, formatNumber } from "@/lib/format";
 
 interface SliderInputProps {
   label: string;
@@ -16,6 +16,7 @@ interface SliderInputProps {
   suffix?: string;
   formatAsCurrency?: boolean;
   compact?: boolean;
+  chipFormatter?: (v: number) => string;
 }
 
 export function SliderInput({
@@ -29,12 +30,13 @@ export function SliderInput({
   suffix = "",
   formatAsCurrency = true,
   compact = false,
+  chipFormatter,
 }: SliderInputProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
 
   const fmt = (v: number) => {
-    if (formatAsCurrency) return compact ? formatCurrencyCompact(v) : formatNumber(v);
+    if (formatAsCurrency) return compact ? formatCurrencyCompact(v) : formatCurrency(v);
     return formatNumber(v);
   };
 
@@ -91,7 +93,7 @@ export function SliderInput({
                 : "bg-secondary/50 text-foreground/40 hover:text-foreground/70 hover:bg-secondary"
             }`}
           >
-            {fmt(c)}{suffix}
+            {chipFormatter ? chipFormatter(c) : `${fmt(c)}${suffix}`}
           </button>
         ))}
       </div>

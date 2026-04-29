@@ -62,6 +62,7 @@ export default function AffordPage() {
             max={100000}
             step={1000}
             chips={[0, 5000, 10000, 25000, 50000]}
+            chipFormatter={(v) => v === 0 ? "None" : `₹${(v / 1000).toFixed(0)}K`}
           />
 
           <SliderInput
@@ -93,6 +94,9 @@ export default function AffordPage() {
         <div className="space-y-6">
           {/* DTI Gauge */}
           <div className="bg-card rounded-2xl p-5 border border-white/5">
+            <p className="text-xs text-foreground/40 mb-3">
+              DTI (Debt-to-Income) = total monthly EMIs ÷ income. Lenders prefer below 50%.
+            </p>
             <DTIGauge dti={result.dtiRatio} />
           </div>
 

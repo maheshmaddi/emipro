@@ -3,6 +3,7 @@
 import React from "react";
 import { SliderInput } from "@/components/calculator/SliderInput";
 import { OneTimePrepayment } from "@/lib/prepayment";
+type PrepaymentInput = Omit<OneTimePrepayment, "id">;
 
 interface PrepaymentFormProps {
   amount: number;
@@ -13,8 +14,8 @@ interface PrepaymentFormProps {
   onAmountChange: (v: number) => void;
   onRateChange: (v: number) => void;
   onTenureChange: (v: number) => void;
-  onAddPrepayment: (p: OneTimePrepayment) => void;
-  onRemovePrepayment: (index: number) => void;
+  onAddPrepayment: (p: PrepaymentInput) => void;
+  onRemovePrepayment: (id: string) => void;
   onMonthlyExtraChange: (v: number) => void;
 }
 
@@ -33,6 +34,7 @@ export function PrepaymentForm({
 }: PrepaymentFormProps) {
   const [prepaymentAmount, setPrepaymentAmount] = React.useState(100000);
   const [prepaymentMonth, setPrepaymentMonth] = React.useState(12);
+  const [added, setAdded] = React.useState(false);
 
   const maxMonth = tenure * 12;
 
@@ -88,16 +90,16 @@ export function PrepaymentForm({
           <label className="text-sm text-foreground/70">One-time Prepayments</label>
         </div>
 
-        {oneTimePrepayments.map((p, i) => (
+        {oneTimePrepayments.map((p) => (
           <div
-            key={i}
+            key={p.id}
             className="bg-secondary/30 rounded-lg p-3 flex items-center justify-between"
           >
             <span className="text-sm">
               ₹{(p.amount / 100000).toFixed(2)}L at month {p.atMonth}
             </span>
             <button
-              onClick={() => onRemovePrepayment(i)}
+              onClick={() => onRemovePrepayment(p.id)}
               className="text-xs text-red-400 hover:text-red-300"
             >
               Remove
@@ -133,12 +135,18 @@ export function PrepaymentForm({
                 max={maxMonth}
               />
               <button
-                onClick={() =>
-                  onAddPrepayment({ amount: prepaymentAmount, atMonth: prepaymentMonth })
-                }
-                className="px-3 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                onClick={() => {
+                  onAddPrepayment({ amount: prepaymentAmount, atMonth: prepaymentMonth });
+                  setAdded(true);
+                  setTimeout(() => setAdded(false), 1500);
+                }}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  added
+                    ? "bg-emerald-500 text-white"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90"
+                }`}
               >
-                Add
+                {added ? "✓ Added!" : "Add"}
               </button>
             </div>
           </div>

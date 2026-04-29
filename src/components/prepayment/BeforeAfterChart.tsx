@@ -1,9 +1,19 @@
 "use client";
 
 import React from "react";
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+  CartesianGrid,
+} from "recharts";
 import { PrepaymentResult } from "@/lib/prepayment";
 import { formatCurrency } from "@/lib/format";
+import { useChartTheme } from "@/lib/chart-theme";
 
 interface BeforeAfterChartProps {
   result: PrepaymentResult;
@@ -12,30 +22,32 @@ interface BeforeAfterChartProps {
 }
 
 export function BeforeAfterChart({ result, originalTenure, rate }: BeforeAfterChartProps) {
+  const chartTheme = useChartTheme();
   const monthlyRate = rate / 12 / 100;
   const tenureMonths = Math.ceil(result.newTenure * 12) || 1;
-  const emi = result.after.emi;
+  const beforeEmi = result.before.emi;
+  const afterEmi = result.after.emi;
 
-  // Generate before curve
+  // Generate before curve using before EMI (without prepayment)
   const beforeData: { month: number; before: number; after: number }[] = [];
   let beforeBalance = result.before.principal;
 
   for (let i = 1; i <= originalTenure * 12; i++) {
     const interest = beforeBalance * monthlyRate;
-    const principal = emi - interest;
+    const principal = beforeEmi - interest;
     beforeBalance -= principal;
     if (beforeBalance < 0) beforeBalance = 0;
 
     beforeData.push({ month: i, before: beforeBalance, after: 0 });
   }
 
-  // Generate after curve
+  // Generate after curve using after EMI (with prepayment)
   const afterData = [...beforeData];
   let afterBalance = result.after.principal;
 
   for (let i = 1; i <= tenureMonths; i++) {
     const interest = afterBalance * monthlyRate;
-    const principal = emi - interest;
+    const principal = afterEmi - interest;
     afterBalance -= principal;
     if (afterBalance < 0) afterBalance = 0;
 
@@ -44,8 +56,15 @@ export function BeforeAfterChart({ result, originalTenure, rate }: BeforeAfterCh
     }
   }
 
-  // Trim data to relevant period
   const displayData = afterData.slice(0, Math.max(tenureMonths, originalTenure * 12));
+
+  if (result.interestSaved === 0 && result.tenureSaved.years === 0 && result.tenureSaved.months === 0) {
+    return (
+      <div className="h-64 flex items-center justify-center text-sm text-foreground/40">
+        Add a prepayment above to see the balance impact
+      </div>
+    );
+  }
 
   return (
     <div className="h-64">
@@ -61,20 +80,30 @@ export function BeforeAfterChart({ result, originalTenure, rate }: BeforeAfterCh
               <stop offset="95%" stopColor="#00B894" stopOpacity={0} />
             </linearGradient>
           </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
           <XAxis
             dataKey="month"
-            className="text-xs"
+            stroke={chartTheme.axisColor}
+            tick={{ fill: chartTheme.axisColor, fontSize: 11 }}
             tickFormatter={(v) => `${Math.floor(v / 12)}y${v % 12 > 0 ? v % 12 + "m" : ""}`}
           />
-          <YAxis className="text-xs" tickFormatter={(v) => formatCurrency(v)} />
+          <YAxis
+            stroke={chartTheme.axisColor}
+            tick={{ fill: chartTheme.axisColor, fontSize: 11 }}
+            tickFormatter={(v) => formatCurrency(v)}
+          />
           <Tooltip
-            formatter={(value: number, name: string) => [formatCurrency(value), name === "before" ? "Without Prepayment" : "With Prepayment"]}
+            formatter={(value: number, name: string) => [
+              formatCurrency(value),
+              name === "before" ? "Without Prepayment" : "With Prepayment",
+            ]}
             labelFormatter={(label) => `Month ${label}`}
             contentStyle={{
-              backgroundColor: "#1A1A2E",
-              border: "1px solid rgba(255,255,255,0.1)",
+              backgroundColor: chartTheme.tooltipBackground,
+              border: `1px solid ${chartTheme.tooltipBorder}`,
               borderRadius: "8px",
             }}
+            labelStyle={{ color: chartTheme.axisColor }}
           />
           <Legend />
           <Area
