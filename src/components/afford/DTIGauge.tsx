@@ -25,7 +25,14 @@ export function DTIGauge({ dti }: DTIGaugeProps) {
         </span>
       </div>
 
-      <div className="h-4 rounded-full bg-secondary/50 overflow-hidden relative">
+      <div
+        role="meter"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(dti)}
+        aria-label={`Debt-to-Income ratio: ${dti.toFixed(1)}%`}
+        className="h-4 rounded-full bg-secondary/50 overflow-hidden relative"
+      >
         {/* Color zones */}
         <div className="absolute inset-0 flex">
           <div className="w-[40%] bg-emerald-500/30" />

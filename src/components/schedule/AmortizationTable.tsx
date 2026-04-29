@@ -111,13 +111,16 @@ export function AmortizationTable({ principal, rate, tenure }: Props) {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
+          <caption className="sr-only">
+            Amortization schedule — {view} view
+          </caption>
           <thead>
             <tr className="text-[11px] uppercase tracking-wider text-foreground/30">
-              <th className="text-left py-3 px-5 font-medium">{label}</th>
-              <th className="text-right py-3 px-5 font-medium">EMI</th>
-              <th className="text-right py-3 px-5 font-medium">Principal</th>
-              <th className="text-right py-3 px-5 font-medium">Interest</th>
-              <th className="text-right py-3 px-5 font-medium">Balance</th>
+              <th scope="col" className="text-left py-3 px-5 font-medium">{label}</th>
+              <th scope="col" className="text-right py-3 px-5 font-medium">EMI</th>
+              <th scope="col" className="text-right py-3 px-5 font-medium">Principal</th>
+              <th scope="col" className="text-right py-3 px-5 font-medium">Interest</th>
+              <th scope="col" className="text-right py-3 px-5 font-medium">Balance</th>
             </tr>
           </thead>
           <tbody>

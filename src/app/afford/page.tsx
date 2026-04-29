@@ -37,7 +37,7 @@ export default function AffordPage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-[1fr_340px] gap-6">
+      <div className="flex flex-col-reverse gap-6 md:grid md:grid-cols-[1fr_340px]">
         {/* Left: Input Form */}
         <div className="bg-card rounded-2xl p-6 border border-white/5 space-y-6">
           <h3 className="text-sm font-semibold text-foreground/50 uppercase tracking-wider">
@@ -91,7 +91,11 @@ export default function AffordPage() {
         </div>
 
         {/* Right: Results */}
-        <div className="space-y-6">
+        <div className="space-y-6 md:sticky md:top-24 md:self-start">
+          {/* First-visit hint */}
+          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 text-sm text-foreground/60">
+            💡 Adjust the sliders on the left to see your personalised affordability result here.
+          </div>
           {/* DTI Gauge */}
           <div className="bg-card rounded-2xl p-5 border border-white/5">
             <p className="text-xs text-foreground/40 mb-3">
