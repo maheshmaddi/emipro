@@ -18,14 +18,25 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "EMIPro - Best-in-Class Loan/EMI Calculator",
-  description: "Free, open-source EMI calculator with live calculations, charts, and amortization schedules. Perfect for home loans, car loans, personal loans, and more.",
-  keywords: ["EMI Calculator", "Loan Calculator", "Home Loan EMI", "Car Loan EMI", "Personal Loan EMI"],
+  metadataBase: new URL("https://emipro-calculator.netlify.app"),
+  title: {
+    default: "EMIPro - Free EMI Calculator for Home, Car & Personal Loans",
+    template: "%s | EMIPro",
+  },
+  description: "Free, open-source EMI calculator with live calculations, amortization schedules, prepayment simulator, loan comparison & more. Works offline. No ads.",
+  keywords: ["EMI Calculator", "Loan EMI Calculator", "Home Loan EMI Calculator", "Car Loan EMI Calculator", "Personal Loan EMI Calculator", "Amortization Schedule", "Prepayment Calculator", "Loan Comparison", "EMI Calculator India", "Home Loan Calculator", "Interest Rate Calculator"],
+  authors: [{ name: "Mahesh Maddi" }],
+  creator: "Mahesh Maddi",
+  publisher: "EMIPro",
+  robots: { index: true, follow: true },
+  alternates: { canonical: "https://emipro-calculator.netlify.app" },
   openGraph: {
-    title: "EMIPro - Best-in-Class Loan/EMI Calculator",
-    description: "Free, open-source EMI calculator with live calculations, charts, and amortization schedules. Perfect for home loans, car loans, personal loans, and more.",
+    title: "EMIPro - Free EMI Calculator for Home, Car & Personal Loans",
+    description: "Calculate loan EMI instantly with charts, amortization schedule & prepayment simulator. 100% free, no ads.",
     type: "website",
-    url: "https://emipro.app",
+    url: "https://emipro-calculator.netlify.app",
+    siteName: "EMIPro",
+    locale: "en_IN",
     images: [
       {
         url: "/og-image.svg",
@@ -37,8 +48,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "EMIPro - Best-in-Class Loan/EMI Calculator",
-    description: "Free, open-source EMI calculator with live calculations, charts, and amortization schedules.",
+    title: "EMIPro - Free EMI Calculator",
+    description: "Calculate loan EMI instantly. Charts, amortization, prepayment simulator & more.",
     images: ["/og-image.svg"],
   },
   manifest: "/manifest.json",
@@ -73,6 +84,29 @@ export default function RootLayout({
             <main className="flex-1 px-4 py-6">{children}</main>
             <Footer />
           </div>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebApplication",
+                "name": "EMIPro",
+                "url": "https://emipro-calculator.netlify.app",
+                "description": "Free EMI calculator with live calculations, charts, amortization schedules, prepayment simulator, and loan comparison for Indian loans.",
+                "applicationCategory": "FinanceApplication",
+                "operatingSystem": "Web",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "INR"
+                },
+                "author": {
+                  "@type": "Person",
+                  "name": "Mahesh Maddi"
+                }
+              }),
+            }}
+          />
         </Providers>
       </body>
     </html>
