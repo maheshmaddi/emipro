@@ -19,6 +19,8 @@ interface LoanTypeCalculatorContentProps {
   h1: string;
   content: string;
   faqs: Array<{ question: string; answer: string }>;
+  howToUse: string;
+  relatedCalculators: Array<{ title: string; url: string }>;
 }
 
 export function LoanTypeCalculatorContent({
@@ -27,6 +29,8 @@ export function LoanTypeCalculatorContent({
   h1,
   content,
   faqs,
+  howToUse,
+  relatedCalculators,
 }: LoanTypeCalculatorContentProps) {
   const setLoanTypeInStore = useCalculatorStore((state) => state.setLoanType);
 
@@ -168,6 +172,57 @@ export function LoanTypeCalculatorContent({
           ))}
         </div>
       </section>
+
+      {/* ===== HOW TO USE SECTION ===== */}
+      {howToUse && (
+        <section className="mt-8 bg-card rounded-2xl p-6 border border-white/5">
+          <div className="prose prose-invert max-w-none text-foreground/80">
+            {howToUse.split("\n\n").map((paragraph, idx) => {
+              if (paragraph.startsWith("##")) {
+                const headingText = paragraph.replace(/^##\s*/, "");
+                return (
+                  <h2 key={idx} className="text-xl font-bold mb-4 mt-6">{headingText}</h2>
+                );
+              }
+              if (paragraph.startsWith("-")) {
+                const points = paragraph.split("\n").filter(p => p.trim().startsWith("-"));
+                return (
+                  <ul key={idx} className="list-disc list-inside mb-4 space-y-2">
+                    {points.map((point, i) => (
+                      <li key={i} className="text-foreground/80">{point.replace(/^-\s*/, "")}</li>
+                    ))}
+                  </ul>
+                );
+              }
+              return (
+                <p key={idx} className="mb-4 leading-relaxed">
+                  {paragraph}
+                </p>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* ===== RELATED CALCULATORS SECTION ===== */}
+      {relatedCalculators && relatedCalculators.length > 0 && (
+        <section className="mt-8 bg-card rounded-2xl p-6 border border-white/5">
+          <h2 className="text-xl font-bold mb-6">Related Calculators</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {relatedCalculators.map((calc, idx) => (
+              <a
+                key={idx}
+                href={calc.url}
+                className="flex items-center p-4 rounded-xl bg-primary/5 hover:bg-primary/10 transition-colors border border-primary/20"
+              >
+                <span className="text-2xl mr-3">📊</span>
+                <span className="font-medium text-foreground/90">{calc.title}</span>
+                <span className="ml-auto text-primary">→</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ===== FEATURE LINKS ===== */}
       <FeatureLinks />
