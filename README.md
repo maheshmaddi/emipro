@@ -2,6 +2,8 @@
 
 > Free, open-source, privacy-first EMI calculator built for India. No ads. No data collection. Just results.
 
+🌐 **Live at: [emipro-calculator.netlify.app](https://emipro-calculator.netlify.app)**
+
 ![EMIPro Home](https://raw.githubusercontent.com/maheshmaddi/emipro/master/screenshots/home.png)
 
 ## ✨ Features
@@ -70,6 +72,8 @@
 ### 🔍 SEO Optimized
 - Unique pages per loan type with helpful content & FAQs
 - Open Graph meta tags for social sharing
+- Sitemap + robots.txt
+- Structured data (JSON-LD)
 - Fast Core Web Vitals
 
 ### 📲 PWA Ready
@@ -88,7 +92,7 @@
 | State | Zustand |
 | PDF Export | jsPDF |
 | PWA | Service Worker + Manifest |
-| Hosting | Vercel (recommended) |
+| Hosting | Netlify |
 
 ## 🚀 Getting Started
 
@@ -104,8 +108,7 @@ npm install
 npm run dev
 
 # Build
-npm run build
-npm start
+npm run build && npm start
 ```
 
 ## 📁 Project Structure
@@ -144,23 +147,29 @@ emipro/
     └── sw.js                 # Service worker
 ```
 
-## 📄 Pages
+## 📄 All Pages
 
 | Route | Description |
 |-------|-------------|
 | `/` | Main EMI Calculator |
-| `/home-loan` | Home Loan EMI Calculator (SEO) |
-| `/car-loan` | Car Loan EMI Calculator (SEO) |
-| `/personal-loan` | Personal Loan EMI Calculator (SEO) |
-| `/education-loan` | Education Loan EMI Calculator (SEO) |
-| `/gold-loan` | Gold Loan EMI Calculator (SEO) |
-| `/business-loan` | Business Loan EMI Calculator (SEO) |
+| `/home-loan` | Home Loan EMI Calculator |
+| `/car-loan` | Car Loan EMI Calculator |
+| `/personal-loan` | Personal Loan EMI Calculator |
+| `/education-loan` | Education Loan EMI Calculator |
+| `/gold-loan` | Gold Loan EMI Calculator |
+| `/business-loan` | Business Loan EMI Calculator |
 | `/compare` | Loan Comparison Tool |
 | `/prepayment` | Prepayment Simulator |
 | `/afford` | Affordability Checker |
 | `/refinance` | Refinance Calculator |
 | `/foreclosure` | Foreclosure Calculator |
 | `/rate-change` | Interest Rate Impact Analyzer |
+
+## 🔗 Links
+
+- **Website:** [emipro-calculator.netlify.app](https://emipro-calculator.netlify.app)
+- **GitHub:** [github.com/maheshmaddi/emipro](https://github.com/maheshmaddi/emipro)
+- **Sitemap:** [emipro-calculator.netlify.app/sitemap.xml](https://emipro-calculator.netlify.app/sitemap.xml)
 
 ## 🤝 Contributing
 
