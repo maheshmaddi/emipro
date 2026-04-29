@@ -41,40 +41,79 @@ export function AmortizationTable({ principal, rate, tenure }: Props) {
     a.click();
   };
 
+  const fmtNum = (n: number) => Math.round(n).toLocaleString("en-IN");
+
   const pdfExport = () => {
     const doc = new jsPDF({ orientation: "landscape" });
-    doc.setFontSize(14);
-    doc.text("Amortization Schedule", 14, 15);
-    doc.setFontSize(9);
-    let y = 25;
-    const cols = [label, "EMI", "Principal", "Interest", "Balance"];
-    // Proportional columns across landscape width (297mm), leaving 14mm left margin
-    const widths = [14, 65, 120, 178, 236];
-    const pageHeight = 200; // usable height in landscape
+    const emiLabel = view === "yearly" ? "Total EMI (Year)" : "EMI";
 
+    // Title
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("EMIPro - Amortization Schedule", 14, 15);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.text(
+      `Loan: Rs.${fmtNum(principal)} | Rate: ${rate}% | Tenure: ${tenure} years | EMI: Rs.${fmtNum(monthly[0]?.emi ?? 0)}/month`,
+      14, 21
+    );
+
+    let y = 30;
+    const cols = [label, emiLabel, "Principal", "Interest", "Balance"];
+    const widths = [14, 45, 100, 155, 210];
+    const pageHeight = 195;
+
+    // Header
+    doc.setFillColor(108, 92, 231); // primary purple
+    doc.rect(12, y - 4, 275, 8, "F");
+    doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     cols.forEach((c, i) => doc.text(c, widths[i], y));
-    y += 7;
+    y += 8;
+    doc.setTextColor(0, 0, 0);
     doc.setFont("helvetica", "normal");
 
-    const rows = data.slice(0, 100);
-    rows.forEach((e: any) => {
+    const rows = data;
+    rows.forEach((e: any, idx: number) => {
       if (y > pageHeight) { doc.addPage(); y = 15; }
+      // Alternate row shading
+      if (idx % 2 === 0) {
+        doc.setFillColor(245, 245, 250);
+        doc.rect(12, y - 4, 275, 6, "F");
+      }
       doc.text(String(e[keyProp]), widths[0], y);
-      doc.text(formatCurrency(e.emi), widths[1], y);
-      doc.text(formatCurrency(e.principal), widths[2], y);
-      doc.text(formatCurrency(e.interest), widths[3], y);
-      doc.text(formatCurrency(e.balance), widths[4], y);
-      y += 5;
+      doc.text(`Rs.${fmtNum(e.emi)}`, widths[1], y);
+      doc.text(`Rs.${fmtNum(e.principal)}`, widths[2], y);
+      doc.text(`Rs.${fmtNum(e.interest)}`, widths[3], y);
+      doc.text(`Rs.${fmtNum(e.balance)}`, widths[4], y);
+      y += 6;
     });
 
-    if (data.length > 100) {
-      if (y > pageHeight) { doc.addPage(); y = 15; }
-      doc.setFont("helvetica", "italic");
-      doc.text(`... and ${data.length - 100} more rows (showing first 100)`, 14, y + 4);
+    // Footer
+    const totalPrincipal = data.reduce((s: number, e: any) => s + e.principal, 0);
+    const totalInterest = data.reduce((s: number, e: any) => s + e.interest, 0);
+    const totalEmi = data.reduce((s: number, e: any) => s + e.emi, 0);
+    y += 4;
+    if (y > pageHeight) { doc.addPage(); y = 15; }
+    doc.setDrawColor(108, 92, 231);
+    doc.line(12, y - 2, 287, y - 2);
+    doc.setFont("helvetica", "bold");
+    doc.text("TOTAL", widths[0], y + 2);
+    doc.text(`Rs.${fmtNum(totalEmi)}`, widths[1], y + 2);
+    doc.text(`Rs.${fmtNum(totalPrincipal)}`, widths[2], y + 2);
+    doc.text(`Rs.${fmtNum(totalInterest)}`, widths[3], y + 2);
+
+    // Page numbers
+    const pages = doc.getNumberOfPages();
+    for (let i = 1; i <= pages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Page ${i} of ${pages} | EMIPro`, 270, 205);
     }
 
-    doc.save(`amortization-${view}.pdf`);
+    doc.save(`emipro-amortization-${view}.pdf`);
   };
 
   return (
