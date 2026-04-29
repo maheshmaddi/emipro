@@ -63,7 +63,7 @@ export function LoanTypeCalculatorContent({
         </div>
 
         {/* Right: EMI Result Card */}
-        <div className="bg-gradient-to-b from-primary/20 to-primary/5 rounded-2xl p-6 border border-primary/20 text-center sticky top-20">
+        <div className="bg-gradient-to-b from-primary/20 to-primary/5 rounded-2xl p-6 border border-primary/20 text-center sticky top-24">
           <p className="text-[11px] uppercase tracking-[0.15em] text-foreground/50 font-semibold">
             Monthly EMI
           </p>

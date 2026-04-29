@@ -3,6 +3,7 @@
 import React from "react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { generateChartData } from "@/lib/amortization";
+import { useChartTheme } from "@/lib/chart-theme";
 
 interface BalanceOverTimeChartProps {
   principal: number;
@@ -12,6 +13,7 @@ interface BalanceOverTimeChartProps {
 
 export function BalanceOverTimeChart({ principal, rate, tenure }: BalanceOverTimeChartProps) {
   const chartData = generateChartData(principal, rate, tenure);
+  const chartTheme = useChartTheme();
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -32,7 +34,7 @@ export function BalanceOverTimeChart({ principal, rate, tenure }: BalanceOverTim
   };
 
   return (
-    <div className="h-48">
+    <div className="h-48 md:h-56">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 5, right: 5, left: -10, bottom: 5 }}>
           <defs>
@@ -41,18 +43,18 @@ export function BalanceOverTimeChart({ principal, rate, tenure }: BalanceOverTim
               <stop offset="95%" stopColor="#6C5CE7" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+          <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
           <XAxis
             dataKey="month"
             tickFormatter={(value) => `${value}yr`}
-            stroke="rgba(255,255,255,0.3)"
-            tick={{ fontSize: 11 }}
+            stroke={chartTheme.axisColor}
+            tick={{ fontSize: 11, fill: chartTheme.axisColor }}
           />
           <YAxis
             tickFormatter={formatYAxis}
-            stroke="rgba(255,255,255,0.3)"
+            stroke={chartTheme.axisColor}
+            tick={{ fontSize: 11, fill: chartTheme.axisColor }}
             width={55}
-            tick={{ fontSize: 11 }}
           />
           <Tooltip content={<CustomTooltip />} />
           <Area

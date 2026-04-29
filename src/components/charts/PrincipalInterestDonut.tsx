@@ -35,7 +35,7 @@ export function PrincipalInterestDonut({ principal, interest }: PrincipalInteres
 
   return (
     <div>
-      <div className="h-48">
+      <div className="h-48 md:h-56">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -62,11 +62,11 @@ export function PrincipalInterestDonut({ principal, interest }: PrincipalInteres
       <div className="flex justify-center gap-6 mt-2">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-[#6C5CE7]" />
-          <span className="text-xs text-foreground/60">Principal {principalPct}%</span>
+          <span className="text-xs text-muted-foreground">Principal {principalPct}%</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-[#00B894]" />
-          <span className="text-xs text-foreground/60">Interest {interestPct}%</span>
+          <span className="text-xs text-muted-foreground">Interest {interestPct}%</span>
         </div>
       </div>
     </div>

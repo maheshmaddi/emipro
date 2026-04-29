@@ -4,6 +4,7 @@ import React from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { ComparisonResult } from "@/lib/comparison";
 import { formatCurrency } from "@/lib/format";
+import { useChartTheme } from "@/lib/chart-theme";
 
 interface ComparisonBarChartProps {
   result: ComparisonResult;
@@ -11,6 +12,7 @@ interface ComparisonBarChartProps {
 
 export function ComparisonBarChart({ result }: ComparisonBarChartProps) {
   const colors = ["#6C5CE7", "#00B894", "#FDCB6E"];
+  const chartTheme = useChartTheme();
 
   const data = [
     {
@@ -45,8 +47,8 @@ export function ComparisonBarChart({ result }: ComparisonBarChartProps) {
           <Tooltip
             formatter={(value: number) => formatCurrency(value)}
             contentStyle={{
-              backgroundColor: "#1A1A2E",
-              border: "1px solid rgba(255,255,255,0.1)",
+              backgroundColor: chartTheme.tooltipBackground,
+              border: `1px solid ${chartTheme.tooltipBorder}`,
               borderRadius: "8px",
             }}
           />

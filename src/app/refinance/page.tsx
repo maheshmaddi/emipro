@@ -61,7 +61,7 @@ export default function RefinancePage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-[1fr_340px] gap-6">
+      <div className="flex flex-col-reverse gap-6 md:grid md:grid-cols-[1fr_340px]">
         {/* Left: Input Forms */}
         <div className="space-y-6">
           {/* Current Loan */}
@@ -155,7 +155,11 @@ export default function RefinancePage() {
         </div>
 
         {/* Right: Results */}
-        <div className="space-y-4">
+        <div className="space-y-4 md:sticky md:top-24 md:self-start">
+          {/* First-visit hint */}
+          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 text-sm text-foreground/60">
+            💡 Adjust the sliders on the left to see whether refinancing is worth it for you.
+          </div>
           {/* Main Result Card */}
           <div className={`rounded-2xl p-6 border ${
             result.isWorthIt

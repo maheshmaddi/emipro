@@ -34,10 +34,22 @@ export function SliderInput({
 }: SliderInputProps) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
+  const [invalid, setInvalid] = useState(false);
 
   const fmt = (v: number) => {
     if (formatAsCurrency) return compact ? formatCurrencyCompact(v) : formatCurrency(v);
     return formatNumber(v);
+  };
+
+  const commitEdit = () => {
+    const n = parseFloat(draft);
+    if (!isNaN(n) && n >= min && n <= max) {
+      onChange(n);
+    } else if (!isNaN(n)) {
+      setInvalid(true);
+      setTimeout(() => setInvalid(false), 600);
+    }
+    setEditing(false);
   };
 
   return (
@@ -50,21 +62,21 @@ export function SliderInput({
             type="number"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => {
-              const n = parseFloat(draft);
-              if (!isNaN(n) && n >= min && n <= max) onChange(n);
-              setEditing(false);
-            }}
+            onBlur={commitEdit}
             onKeyDown={(e) => {
-              if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+              if (e.key === "Enter") commitEdit();
               if (e.key === "Escape") setEditing(false);
             }}
             autoFocus
-            className="w-28 bg-transparent border-b border-primary text-right font-mono text-lg font-semibold outline-none"
+            aria-label={label}
+            className={`w-28 bg-transparent border-b text-right font-mono text-lg font-semibold outline-none transition-colors ${
+              invalid ? "border-red-500 animate-[shake_0.3s_ease]" : "border-primary"
+            }`}
           />
         ) : (
           <button
             onClick={() => { setDraft(value.toString()); setEditing(true); }}
+            aria-label={`Edit ${label}: currently ${fmt(value)}${suffix}`}
             className="font-mono text-lg font-semibold text-foreground hover:text-primary transition-colors"
           >
             {fmt(value)}{suffix}
@@ -79,14 +91,17 @@ export function SliderInput({
         min={min}
         max={max}
         step={step}
+        aria-label={label}
+        aria-valuetext={`${fmt(value)}${suffix}`}
       />
 
       {/* Chips */}
-      <div className="flex flex-wrap gap-1.5 mt-2.5">
+      <div className="flex flex-wrap gap-1.5 mt-2.5" role="group" aria-label={`${label} presets`}>
         {chips.map((c) => (
           <button
             key={c}
             onClick={() => onChange(c)}
+            aria-pressed={value === c}
             className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
               value === c
                 ? "bg-primary text-primary-foreground"

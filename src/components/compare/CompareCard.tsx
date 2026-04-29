@@ -41,7 +41,8 @@ export function CompareCard({ loan, isWinner, onUpdate, onRemove, canRemove }: C
         {canRemove && (
           <button
             onClick={onRemove}
-            className="w-8 h-8 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors flex items-center justify-center"
+            aria-label="Remove this loan"
+            className="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>

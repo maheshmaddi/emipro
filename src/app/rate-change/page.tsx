@@ -81,7 +81,7 @@ export default function RateChangePage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-[1fr_340px] gap-6">
+      <div className="flex flex-col-reverse gap-6 md:grid md:grid-cols-[1fr_340px]">
         {/* Left: Input Form */}
         <div className="bg-card rounded-2xl p-6 border border-white/5">
           <h2 className="text-lg font-semibold mb-4">Current Loan Details</h2>
@@ -161,7 +161,7 @@ export default function RateChangePage() {
         </div>
 
         {/* Right: Current Status */}
-        <div className="space-y-4">
+        <div className="space-y-4 md:sticky md:top-24 md:self-start">
           <div className="bg-card rounded-2xl p-5 border border-white/5">
             <p className="text-sm text-foreground/50 mb-1">Current Interest Rate</p>
             <p className="text-3xl font-bold font-mono">{currentRate}%</p>

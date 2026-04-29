@@ -14,6 +14,17 @@ export function EmiHero({ emi }: EmiHeroProps) {
     if (!nodeRef.current) return;
     const start = prevEmi.current;
     const end = emi;
+
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReduced) {
+      nodeRef.current.textContent = `₹${Math.round(emi).toLocaleString("en-IN")}`;
+      prevEmi.current = emi;
+      return;
+    }
+
     const dur = 250;
     const t0 = performance.now();
 
@@ -22,7 +33,7 @@ export function EmiHero({ emi }: EmiHeroProps) {
       const ease = 1 - Math.pow(1 - t, 3);
       const val = Math.round(start + (end - start) * ease);
       if (nodeRef.current) {
-        nodeRef.current.textContent = val.toLocaleString("en-IN");
+        nodeRef.current.textContent = `₹${val.toLocaleString("en-IN")}`;
       }
       if (t < 1) requestAnimationFrame(tick);
       else prevEmi.current = emi;
@@ -33,6 +44,9 @@ export function EmiHero({ emi }: EmiHeroProps) {
   return (
     <span
       ref={nodeRef}
+      role="status"
+      aria-live="polite"
+      aria-label={`Monthly EMI: ₹${Math.round(emi).toLocaleString("en-IN")}`}
       className="text-4xl md:text-[44px] font-bold font-mono tracking-tight text-foreground"
     >
       ₹{Math.round(emi).toLocaleString("en-IN")}

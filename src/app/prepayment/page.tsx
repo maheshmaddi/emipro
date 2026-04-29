@@ -74,7 +74,7 @@ export default function PrepaymentPage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-[1fr_340px] gap-6">
+      <div className="flex flex-col-reverse gap-6 md:grid md:grid-cols-[1fr_340px]">
         {/* Left: Form */}
         <div>
           <PrepaymentForm
@@ -93,7 +93,7 @@ export default function PrepaymentPage() {
         </div>
 
         {/* Right: Results */}
-        <div>
+        <div className="md:sticky md:top-24 md:self-start">
           <SavingsResult result={result} originalTenure={baseLoan.tenure} />
         </div>
       </div>
