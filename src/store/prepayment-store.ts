@@ -10,9 +10,9 @@ interface PrepaymentState {
   setBaseLoanAmount: (amount: number) => void;
   setBaseLoanRate: (rate: number) => void;
   setBaseLoanTenure: (tenure: number) => void;
-  addOneTimePrepayment: (prepayment: OneTimePrepayment) => void;
+  addOneTimePrepayment: (prepayment: Omit<OneTimePrepayment, "id">) => void;
   updateOneTimePrepayment: (index: number, prepayment: OneTimePrepayment) => void;
-  removeOneTimePrepayment: (index: number) => void;
+  removeOneTimePrepayment: (id: string) => void;
   setMonthlyExtra: (amount: number) => void;
   setReduceTenure: (reduce: boolean) => void;
   reset: () => void;
@@ -38,7 +38,10 @@ export const usePrepaymentStore = create<PrepaymentState>((set) => ({
     set((state) => ({ baseLoan: { ...state.baseLoan, tenure } })),
   addOneTimePrepayment: (prepayment) =>
     set((state) => ({
-      oneTimePrepayments: [...state.oneTimePrepayments, prepayment],
+      oneTimePrepayments: [
+        ...state.oneTimePrepayments,
+        { ...prepayment, id: `${Date.now()}-${Math.random()}` },
+      ],
     })),
   updateOneTimePrepayment: (index, prepayment) =>
     set((state) => ({
@@ -46,9 +49,9 @@ export const usePrepaymentStore = create<PrepaymentState>((set) => ({
         i === index ? prepayment : p
       ),
     })),
-  removeOneTimePrepayment: (index) =>
+  removeOneTimePrepayment: (id) =>
     set((state) => ({
-      oneTimePrepayments: state.oneTimePrepayments.filter((_, i) => i !== index),
+      oneTimePrepayments: state.oneTimePrepayments.filter((p) => p.id !== id),
     })),
   setMonthlyExtra: (amount) => set({ monthlyExtra: amount }),
   setReduceTenure: (reduce) => set({ reduceTenure: reduce }),

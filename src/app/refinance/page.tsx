@@ -6,7 +6,8 @@ import { ArrowLeft } from "lucide-react";
 import { useRefinanceStore } from "@/store/refinance-store";
 import { calculateRefinance } from "@/lib/refinance";
 import { SliderInput } from "@/components/calculator/SliderInput";
-import { formatCurrency, formatNumber } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { useChartTheme } from "@/lib/chart-theme";
 import {
   AreaChart,
   Area,
@@ -15,6 +16,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 
 export default function RefinancePage() {
@@ -30,13 +32,18 @@ export default function RefinancePage() {
     setNewLoanProcessingFee,
   } = useRefinanceStore();
 
+  const chartTheme = useChartTheme();
   const result = calculateRefinance({ currentLoan, newLoan });
 
-  // Prepare chart data
   const chartData = result.cumulativeSavings.map((savings, index) => ({
     month: index + 1,
     savings: Math.round(savings),
   }));
+
+  // Chips filtered to not exceed max months for current loan
+  const monthChips = [12, 36, 60, 84, 120].filter(
+    (c) => c <= currentLoan.tenure * 12
+  );
 
   return (
     <div className="max-w-6xl mx-auto pb-16">
@@ -99,7 +106,7 @@ export default function RefinancePage() {
                 min={0}
                 max={currentLoan.tenure * 12}
                 step={1}
-                chips={[12, 36, 60, 84, 120]}
+                chips={monthChips}
                 suffix=" mo"
                 formatAsCurrency={false}
               />
@@ -244,27 +251,35 @@ export default function RefinancePage() {
         </h3>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
             <XAxis
               dataKey="month"
-              stroke="#a0a0b8"
-              tick={{ fill: "#a0a0b8" }}
-              label={{ value: "Month", position: "insideBottom", offset: -5, fill: "#a0a0b8" }}
+              stroke={chartTheme.axisColor}
+              tick={{ fill: chartTheme.axisColor }}
+              label={{ value: "Month", position: "insideBottom", offset: -5, fill: chartTheme.axisColor }}
             />
             <YAxis
-              stroke="#a0a0b8"
-              tick={{ fill: "#a0a0b8" }}
+              stroke={chartTheme.axisColor}
+              tick={{ fill: chartTheme.axisColor }}
               tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}K`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#16213e",
-                border: "1px solid rgba(255,255,255,0.05)",
+                backgroundColor: chartTheme.tooltipBackground,
+                border: `1px solid ${chartTheme.tooltipBorder}`,
                 borderRadius: "12px",
               }}
-              labelStyle={{ color: "#a0a0b8" }}
+              labelStyle={{ color: chartTheme.axisColor }}
               formatter={(value: number) => [formatCurrency(value), "Savings"]}
             />
+            {result.savings.breakEvenMonth > 0 && (
+              <ReferenceLine
+                x={result.savings.breakEvenMonth}
+                stroke="#FDCB6E"
+                strokeDasharray="4 4"
+                label={{ value: "Break-even", fill: "#FDCB6E", fontSize: 11 }}
+              />
+            )}
             <Area
               type="monotone"
               dataKey="savings"

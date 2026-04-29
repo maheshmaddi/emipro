@@ -7,6 +7,7 @@ export interface PrepaymentInput {
 }
 
 export interface OneTimePrepayment {
+  id: string;
   amount: number;
   atMonth: number;
 }

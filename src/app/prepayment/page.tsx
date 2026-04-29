@@ -98,15 +98,13 @@ export default function PrepaymentPage() {
         </div>
       </div>
 
-      {/* Chart */}
-      {(oneTimePrepayments.length > 0 || monthlyExtra > 0) && (
-        <div className="mt-6 bg-card rounded-2xl p-6 border border-white/5">
-          <h3 className="text-sm font-semibold text-foreground/50 uppercase tracking-wider mb-4">
-            Balance Over Time
-          </h3>
-          <BeforeAfterChart result={result} originalTenure={baseLoan.tenure} rate={baseLoan.rate} />
-        </div>
-      )}
+      {/* Chart - always shown, displays placeholder when no prepayments added */}
+      <div className="mt-6 bg-card rounded-2xl p-6 border border-white/5">
+        <h3 className="text-sm font-semibold text-foreground/50 uppercase tracking-wider mb-4">
+          Balance Over Time
+        </h3>
+        <BeforeAfterChart result={result} originalTenure={baseLoan.tenure} rate={baseLoan.rate} />
+      </div>
     </div>
   );
 }

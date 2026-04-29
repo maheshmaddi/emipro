@@ -6,10 +6,9 @@ import { ArrowLeft } from "lucide-react";
 import { useForeclosureStore } from "@/store/foreclosure-store";
 import { calculateForeclosure } from "@/lib/foreclosure";
 import { SliderInput } from "@/components/calculator/SliderInput";
-import { formatCurrency, formatNumber } from "@/lib/format";
+import { formatCurrency } from "@/lib/format";
+import { useChartTheme } from "@/lib/chart-theme";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -34,6 +33,8 @@ export default function ForeclosurePage() {
     setPrepaymentPenalty,
   } = useForeclosureStore();
 
+  const chartTheme = useChartTheme();
+
   const result = calculateForeclosure({
     amount,
     rate,
@@ -42,14 +43,15 @@ export default function ForeclosurePage() {
     prepaymentPenaltyPercent,
   });
 
-  // Prepare chart data - show balance over time with foreclosure point marked
   const chartData = result.balanceHistory.map((balance, index) => ({
     month: index,
     balance: Math.round(balance),
   }));
 
-  // Only show up to foreclosure month + a bit of context
   const displayData = chartData.slice(0, Math.min(foreclosureAtMonth + 12, chartData.length));
+
+  // Chips filtered to not exceed max months
+  const monthChips = [12, 36, 60, 84, 120].filter((c) => c <= tenure * 12);
 
   return (
     <div className="max-w-6xl mx-auto pb-16">
@@ -110,7 +112,7 @@ export default function ForeclosurePage() {
               min={1}
               max={tenure * 12}
               step={1}
-              chips={[12, 36, 60, 84, 120]}
+              chips={monthChips}
               suffix=" mo"
               formatAsCurrency={false}
             />
@@ -149,6 +151,14 @@ export default function ForeclosurePage() {
               </p>
             )}
           </div>
+
+          {/* Warning when not worth it */}
+          {!result.isWorthIt && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-sm text-red-400">
+              ⚠️ A {prepaymentPenaltyPercent}% penalty exceeds your interest savings.
+              Consider foreclosing later when your outstanding balance is lower.
+            </div>
+          )}
 
           {/* Outstanding Balance */}
           <div className="bg-card rounded-2xl p-5 border border-white/5">
@@ -251,25 +261,25 @@ export default function ForeclosurePage() {
         </h3>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={displayData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ffffff10" />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartTheme.gridColor} />
             <XAxis
               dataKey="month"
-              stroke="#a0a0b8"
-              tick={{ fill: "#a0a0b8" }}
-              label={{ value: "Month", position: "insideBottom", offset: -5, fill: "#a0a0b8" }}
+              stroke={chartTheme.axisColor}
+              tick={{ fill: chartTheme.axisColor }}
+              label={{ value: "Month", position: "insideBottom", offset: -5, fill: chartTheme.axisColor }}
             />
             <YAxis
-              stroke="#a0a0b8"
-              tick={{ fill: "#a0a0b8" }}
+              stroke={chartTheme.axisColor}
+              tick={{ fill: chartTheme.axisColor }}
               tickFormatter={(value) => `₹${(value / 100000).toFixed(1)}L`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#16213e",
-                border: "1px solid rgba(255,255,255,0.05)",
+                backgroundColor: chartTheme.tooltipBackground,
+                border: `1px solid ${chartTheme.tooltipBorder}`,
                 borderRadius: "12px",
               }}
-              labelStyle={{ color: "#a0a0b8" }}
+              labelStyle={{ color: chartTheme.axisColor }}
               formatter={(value: number) => [formatCurrency(value), "Balance"]}
             />
             <ReferenceLine
